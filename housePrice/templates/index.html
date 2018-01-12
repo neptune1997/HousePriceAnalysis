@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>中国部分城市房价数据</title>
+<link href="url_for("static",filename="main.css") " rel="stylesheet" type="text/css"/>
+<style type="text/css">
+.demo{width:760px; height:500px; margin:30px auto 0 auto; font-size:14px;}
+.demo p{line-height:30px}
+#btn{width: 50px;height: 50px;border-radius: 50%;border: none}
+</style>
+<script type="text/javascript" src="/static/raphael.js"></script>
+<script type="text/javascript" src="/static/chinamapPath.js"></script>
+
+</head>
+
+<body>
+<div id="header">
+   <div class="demo_topad"><script src="/js/ad_js/demo_topad.js" type="text/javascript"></script></div>
+</div>
+
+<div id="main">
+   <h2 class="top_title">中国部分城市房价</h2>
+   <div class="demo">
+   		<div id="map"></div>
+   </div>
+
+   <br/><div class="ad_76090"><script src="/js/ad_js/ad_demo.js" type="text/javascript"></script></div><br/>
+</div>
+
+<script type="text/javascript">
+window.onload = function () {
+    var R = Raphael("map", 600, 500);
+	//调用绘制地图方法
+    paintMap(R);
+    var circleattr={
+      "fill":"#ff0000",
+      "stroke":"#ff0033",
+      "stroke-width":1,
+      "cursor":"pointer"
+    };
+    var textAttr = {
+        "fill": "#000",
+        "font-size": "12px",
+        "cursor":"default"
+    };
+
+    var current = null;
+
+        //用于对鼠标点击次数的计数；
+        var result = 0;
+        //判断两次点击的区域名字的标志量；
+        var nameFlag = "";
+        var x=0;
+        var y=0;
+
+
+    for (var state in china) {
+		china[state]['path'].color = Raphael.getColor(0.9);
+
+        (function (st, state) {
+
+			//获取当前图形的中心坐标
+            var xx = st.getBBox().x + (st.getBBox().width / 2);
+            var yy = st.getBBox().y + (st.getBBox().height / 2);
+
+			//画点
+      switch (china[state]['name']) {
+                case "北京":
+                  R.text(xx+5, yy+10, china[state]['name']).attr(textAttr);
+                  var circlebj = R.circle(xx,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/北京'})
+                  ;
+                  break;
+                case "四川":
+                  R.text(xx, yy, "成都").attr(textAttr);
+                  var circlecd = R.circle(xx+13,yy-6,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/成都'});
+                  break;
+                case "重庆":
+                  R.text(xx, yy+10, "重庆").attr(textAttr);
+                  var coloredCirclecq = R.circle(xx,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/重庆'});
+                  break;
+                case "浙江":
+                  R.text(xx, yy, "杭州").attr(textAttr);
+                  var coloredCirclehz = R.circle(xx-2,yy-10,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/杭州'});
+                  break;
+                case "辽宁":
+                  R.text(xx, yy, "沈阳").attr(textAttr);
+                  R.text(xx+9, yy+24, "大连").attr(textAttr)
+                  var coloredCircledl = R.circle(xx+4,yy-14,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/大连'});
+                  var coloredCirclesy = R.circle(xx+6,yy+16,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/沈阳'});
+                  break;
+                case "山西":
+                   R.text(xx, yy+10, "太原").attr(textAttr);
+                  var coloredCirclety = R.circle(xx,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/太原'});
+                  break;
+                case "安徽":
+                  R.text(xx, yy+9, "合肥").attr(textAttr);
+                  var coloredCirclehf = R.circle(xx,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/杭州'});
+                  break;
+                case "福建":
+                  R.text(xx, yy, "厦门").attr(textAttr);
+                  var coloredCirclexm = R.circle(xx+5,yy+11,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/厦门'});
+                  break;
+                case "湖北":
+                  R.text(xx, yy, "武汉").attr(textAttr);
+                  var coloredCirclewh = R.circle(xx+9,yy+10,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/武汉'});
+                  break;
+                case "江苏":
+                    R.text(xx+5, yy-10, "南京").attr(textAttr);
+                    var coloredCirclenj = R.circle(xx-1,yy+13,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/南京'});
+                    break;
+                case "河南":
+                    R.text(xx, yy, "郑州").attr(textAttr);
+                    var coloredCirclezz = R.circle(xx+4,yy-12,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/郑州'});
+                    break;
+                case "山东":
+                  R.text(xx-3, yy+5, "济南").attr(textAttr);
+                  R.text(xx+18, yy+5, "青岛").attr(textAttr);
+                  var coloredCirclejn = R.circle(xx-15,yy-3,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/济南'});
+                  var coloredCircleqd = R.circle(xx+12,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/青岛'});
+                  break;
+                case "云南":
+                    R.text(xx, yy+7, "昆明").attr(textAttr);
+                    var coloredCirclekm = R.circle(xx+4,yy-3,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/昆明'});
+                    break;
+                case "湖南":
+                    R.text(xx, yy, "长沙").attr(textAttr);
+                    var coloredCirclecs = R.circle(xx+16,yy-5,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/长沙'});
+                    break;
+                case "广东":
+                    R.text(xx, yy-15, "广州").attr(textAttr);
+                    R.text(xx, yy+12, "深圳").attr(textAttr);
+                    R.text(xx+27, yy-15, "惠州").attr(textAttr);
+                    var coloredCirclegz = R.circle(xx-3,yy-10,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/广州'});
+                    var coloredCirclehz = R.circle(xx+9,yy-7,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/惠州'});
+                    var coloredCirclesz = R.circle(xx+3,yy,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/深圳'});
+                    break;
+                case "陕西":
+                  china[state]['text'] = R.text(xx+5, yy+4,"西安").attr(textAttr);
+                    var coloredCirclexa = R.circle(xx+4,yy+15,3).attr(circleattr).click(function(){window.location.href='http://127.0.0.1:5000/city/西安'});
+                    break;
+                default:
+            }
+
+			st[0].onmouseover = function () {
+                st.animate({fill: st.color, stroke: "#eee"}, 500);
+				china[state]['text'].toFront();
+                R.safari();
+            };
+            st[0].onmouseout = function () {
+                st.animate({fill: "#97d6f5", stroke: "#eee"}, 500);
+				china[state]['text'].toFront();
+                R.safari();
+            };
+
+
+         })(china[state]['path'], state);
+    }
+}
+</script>
+
+<div id="footer">
+    <p><a></a></p>
+</div>
+<p id="stat"><script type="text/javascript" src="/js/tongji.js"></script></p>
+</body>
+</html>

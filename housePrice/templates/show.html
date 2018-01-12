@@ -1,0 +1,126 @@
+<html>  
+    <head>  
+        <!-- 引入 echarts.js -->  
+        <script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.js" charset="utf-8"></script>  
+        <!-- 引入jquery.js -->  
+        <script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js" charset="utf-8"></script>  
+    </head>  
+    <body>  
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->  
+        <div id="main" style="width: 1350px;height:500px;"></div>  
+    </body>  
+    <script type="text/javascript" charset="utf-8">  
+        var a = echarts;  
+        var myChart = a.init(document.getElementById('main'));  
+         // 显示标题，图例和空的坐标轴  
+         myChart.setOption({  
+             title: {  
+                 text: []  
+             },  
+             tooltip : {  
+            trigger: 'axis'  
+            },  
+            toolbox: {  
+                show : true,  
+                feature : {  
+                    mark : {show: true},  
+                    dataView : {
+						show: true,
+						readOnly: false
+					},  
+                    magicType : {show: true, type: ['line', 'bar']},  
+                }  
+            },  
+            calculable : true,  
+  
+             xAxis : [  
+                {  
+                    type : 'category',  
+                    boundaryGap : false,
+                    data : []  
+                }  
+            ],  
+             yAxis : [  
+                {  
+                    type : 'value',  
+                    axisLabel : {  
+                        formatter: '{value}'  
+                    }  
+                }  
+            ],  
+             series : [  
+                {  
+                    name:'房价',  
+                    type:'line',  
+                    data:[],  
+                    markPoint : {  
+                        data : [  
+                            {type : 'max', name: '最大值'},  
+                            {type : 'min', name: '最小值'}  
+                        ]  
+                    },  
+                    markLine : {  
+                        data : [  
+                            {type : 'average', name: '平均值'}  
+                        ]  
+                    }  
+                },]  
+         });  
+         myChart.showLoading();      
+         var districts=[];      
+         var prices=[]; 
+		 var cityName="";
+         $.ajax({  
+         type : "get",    
+         url : "http://127.0.0.1:5000/deal",    
+         dataType : "json",        
+         success : function(result) {   
+             if (result) {
+					cityName=result["data"][0]["cityName"];
+                    for(var i=1;i<result["data"].length;i++){  
+                       districts.push(result["data"][i]["district"]);
+                     }  
+                    for(var i=1;i<result["data"].length;i++){    
+                        prices.push(result["data"][i]["price"]);   
+                      }  
+                    myChart.hideLoading(); 
+					var titleName=cityName+"各地区房价均值（元/平方米）"
+                    myChart.setOption({  
+						title: {  
+							text: titleName  
+						}, 
+                        xAxis: {  
+                            data: districts  
+                        },  
+                        series: [{    
+                            name: '房价',  
+                            data: prices  
+                        }],
+						optionToContent: function(opt) {
+							var axisData = opt.xAxis[0].data;
+							var series = opt.series;
+							var table = '<table style="width:20%;text-align:center" cellspacing="0" cellpadding="0" class="table_Qushi"><tbody><tr>'
+										+ '<td>地区</td>'
+										+ '<td>房价</td>'
+										+ '</tr>';
+							for (var i = 0, l = axisData.length; i < l; i++) {
+								table += '<tr>'
+								+ '<td>' + axisData[i] + '</td>'
+								+ '<td>' + series[0].data[i] + '</td>'
+								+ '</tr>';
+							}
+							table += '</tbody></table>';
+							return table;
+						}
+                    });  
+  
+             }  
+  
+        },  
+         error : function(errorMsg) {    
+         alert("图表请求数据失败!");  
+         myChart.hideLoading();  
+         }  
+    })  
+    </script>  
+</html>
